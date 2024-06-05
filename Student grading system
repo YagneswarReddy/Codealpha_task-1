@@ -1,0 +1,117 @@
+import java.util.Scanner;
+
+public class StudentGrades {
+
+  public static void main(String[] args) {
+    Scanner scanner = new Scanner(System.in);
+
+    int numStudents = getNumberOfStudents(scanner);
+    Student[] students = getGrades(scanner, numStudents);
+
+    Student highestGradeStudent = findHighestGradeStudent(students);
+    Student lowestGradeStudent = findLowestGradeStudent(students);
+
+    double classAverage = calculateAverage(getGradesAsArray(students));
+
+    printResults(highestGradeStudent, lowestGradeStudent, classAverage);
+
+    scanner.close();
+  }
+
+  private static int getNumberOfStudents(Scanner scanner) {
+    System.out.print("Enter the number of students: ");
+    int numStudents;
+    do {
+      numStudents = scanner.nextInt();
+      if (numStudents <= 0) {
+        System.out.print("Invalid number of students. Please enter a positive number: ");
+      }
+    } while (numStudents <= 0);
+    return numStudents;
+  }
+
+  private static Student[] getGrades(Scanner scanner, int numStudents) {
+    Student[] students = new Student[numStudents];
+    for (int i = 0; i < numStudents; i++) {
+      System.out.printf("Enter grade for student %d (0-100): ", i + 1);
+      int grade;
+      do {
+        grade = scanner.nextInt();
+        if (grade < 0 || grade > 100) {
+          System.out.print("Invalid grade. Please enter a number between 0 and 100: ");
+        }
+      } while (grade < 0 || grade > 100);
+      students[i] = new Student(i + 1, grade);
+    }
+    return students;
+  }
+
+  private static int[] getGradesAsArray(Student[] students) {
+    int[] grades = new int[students.length];
+    for (int i = 0; i < students.length; i++) {
+      grades[i] = students[i].getGrade();
+    }
+    return grades;
+  }
+
+  private static double calculateAverage(int[] grades) {
+    double sum = 0;
+    for (int grade : grades) {
+      sum += grade;
+    }
+    return sum / grades.length;
+  }
+
+  private static Student findHighestGradeStudent(Student[] students) {
+    Student highestGradeStudent = students[0];
+    for (Student student : students) {
+      if (student.getGrade() > highestGradeStudent.getGrade()) {
+        highestGradeStudent = student;
+      }
+    }
+    return highestGradeStudent;
+  }
+
+  private static Student findLowestGradeStudent(Student[] students) {
+    Student lowestGradeStudent = students[0];
+    for (Student student : students) {
+      if (student.getGrade() < lowestGradeStudent.getGrade()) {
+        lowestGradeStudent = student;
+      }
+    }
+    return lowestGradeStudent;
+  }
+
+  private static void printResults(Student highestGradeStudent, Student lowestGradeStudent, double classAverage) {
+    System.out.println("\nStudent with Highest Grade:");
+    System.out.println(" ID: " + highestGradeStudent.getId());
+    System.out.println(" Grade: " + highestGradeStudent.getGrade());
+    System.out.println(" Class Average Rank: 1"); // Highest grade has rank 1
+
+    System.out.println("\nStudent with Lowest Grade:");
+    System.out.println(" ID: " + lowestGradeStudent.getId());
+    System.out.println(" Grade: " + lowestGradeStudent.getGrade());
+
+    // Calculate class average rank for remaining students (not implemented yet)
+    System.out.println("\nClass Average: " + classAverage);
+  }
+}
+
+class Student {
+
+  private final int id;
+  private final int grade;
+
+  public Student(int id, int grade) {
+    this.id = id;
+    this.grade = grade;
+  }
+
+  public int getId() {
+    return id;
+  }
+
+  public int getGrade() {
+    return grade;
+  }
+}
